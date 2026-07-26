@@ -10,14 +10,24 @@ option(USE_MYMATH "Use tutorial provided math implementation" OFF)
 
 configure_file(TutorialConfig.h.in TutorialConfig.h)
 
-if(USE_MYMATH)
-  add_subdirectory(MathFunctions)
-  list(APPEND EXTRA_LIBS MathFunctions)
-endif()
+# Add every immediate subdirectory that has its own CMakeLists.txt,
+# then link whatever libraries those subdirectories defined.
+file(GLOB CHILDREN RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/*")
+foreach(child ${CHILDREN})
+  if(IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/${child}"
+     AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${child}/CMakeLists.txt")
+    message(STATUS "Adding subdirectory: ${child}")
+    add_subdirectory(${child})
 
-add_subdirectory(rebel_tools)
-list(APPEND EXTRA_LIBS rebel_tools)
-list(APPEND EXTRA_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/rebel_tools")
+    get_property(child_targets DIRECTORY "${child}" PROPERTY BUILDSYSTEM_TARGETS)
+    foreach(target ${child_targets})
+      get_target_property(target_type ${target} TYPE)
+      if(target_type MATCHES "^(STATIC|SHARED|MODULE|OBJECT|INTERFACE)_LIBRARY$")
+        list(APPEND EXTRA_LIBS ${target})
+      endif()
+    endforeach()
+  endif()
+endforeach()
 
 add_executable(${PROJECT_NAME} main.cpp)
 
