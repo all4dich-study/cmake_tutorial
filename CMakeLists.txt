@@ -13,7 +13,6 @@ configure_file(TutorialConfig.h.in TutorialConfig.h)
 if(USE_MYMATH)
   add_subdirectory(MathFunctions)
   list(APPEND EXTRA_LIBS MathFunctions)
-  list(APPEND EXTRA_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/MathFunctions")
 endif()
 
 add_subdirectory(rebel_tools)
@@ -26,5 +25,4 @@ target_link_libraries(${PROJECT_NAME} PUBLIC ${EXTRA_LIBS})
 
 target_include_directories(${PROJECT_NAME} PUBLIC
   "${PROJECT_BINARY_DIR}"
-  "${EXTRA_INCLUDE_DIRS}"
 )
