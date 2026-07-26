@@ -5,6 +5,7 @@
 #ifdef USE_MYMATH
 #include "MathFunctions.h"
 #endif
+#include "rebel_tools.h"
 // --- The following lines break the C++11 standard (they require C++14 or newer) ---
 
 // C++14: generic lambda (auto parameters not allowed in C++11)
@@ -17,6 +18,8 @@ auto square(int x) {
 
 int main(int argc, char* argv[]) {
     std::cout << "Hello, CMake!" << std::endl;
+
+    print_os_info();
 
     // C++14: digit separators and binary literals (not allowed in C++11)
     int million = 1'000'000;

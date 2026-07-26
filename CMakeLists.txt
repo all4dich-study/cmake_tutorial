@@ -16,6 +16,10 @@ if(USE_MYMATH)
   list(APPEND EXTRA_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/MathFunctions")
 endif()
 
+add_subdirectory(rebel_tools)
+list(APPEND EXTRA_LIBS rebel_tools)
+list(APPEND EXTRA_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/rebel_tools")
+
 add_executable(${PROJECT_NAME} main.cpp)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC ${EXTRA_LIBS})
