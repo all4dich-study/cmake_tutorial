@@ -8,6 +8,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 option(USE_MYMATH "Use tutorial provided math implementation" OFF)
 
+# Subdirectories to skip during auto-detection, e.g.
+#   cmake -S . -B build -DEXCLUDE_SUBDIRS="MathFunctions;experimental"
+set(EXCLUDE_SUBDIRS "" CACHE STRING
+    "Semicolon-separated list of subdirectories to exclude from auto-detection")
+
 configure_file(TutorialConfig.h.in TutorialConfig.h)
 
 # Add every immediate subdirectory that has its own CMakeLists.txt,
@@ -16,6 +21,11 @@ file(GLOB CHILDREN RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_CURRENT_SOURC
 foreach(child ${CHILDREN})
   if(IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/${child}"
      AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${child}/CMakeLists.txt")
+    if(child IN_LIST EXCLUDE_SUBDIRS)
+      message(STATUS "Skipping excluded subdirectory: ${child}")
+      continue()
+    endif()
+
     message(STATUS "Adding subdirectory: ${child}")
     add_subdirectory(${child})
 

@@ -1,4 +1,4 @@
-#include "rebel_tools.h"
+#include "rebel_test.h"
 
 #include <iostream>
 
@@ -8,7 +8,7 @@
 #include <sys/utsname.h>
 #endif
 
-void print_os_info()
+void print_test_info()
 {
 #ifdef _WIN32
   SYSTEM_INFO info;

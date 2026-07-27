@@ -1,7 +1,7 @@
-#ifndef REBEL_TOOLS_H
-#define REBEL_TOOLS_H
+#ifndef REBEL_TEST_H
+#define REBEL_TEST_H
 
 // Print OS name, release/version and machine architecture to stdout.
-void print_os_info();
+void print_test_info();
 
 #endif
