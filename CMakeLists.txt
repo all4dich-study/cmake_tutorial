@@ -31,6 +31,7 @@ foreach(child ${CHILDREN})
 
     message(STATUS "Adding subdirectory: ${TARGET_DIR}/${child}")
     add_subdirectory(${TARGET_DIR}/${child})
+    list(APPEND BUILT_SUBDIRS ${child})
 
     get_property(child_targets DIRECTORY "${TARGET_DIR}/${child}" PROPERTY BUILDSYSTEM_TARGETS)
     foreach(target ${child_targets})
@@ -41,6 +42,14 @@ foreach(child ${CHILDREN})
     endforeach()
   endif()
 endforeach()
+
+# Write the list of subdirectories that were built to a file, one per line.
+set(BUILT_SUBDIRS_TEXT "")
+foreach(dir ${BUILT_SUBDIRS})
+  string(APPEND BUILT_SUBDIRS_TEXT "${dir}\n")
+endforeach()
+file(WRITE "${PROJECT_BINARY_DIR}/built_subdirs.txt" "${BUILT_SUBDIRS_TEXT}")
+message(STATUS "Wrote built subdirectory list to ${PROJECT_BINARY_DIR}/built_subdirs.txt")
 
 add_executable(${PROJECT_NAME} main.cpp)
 
