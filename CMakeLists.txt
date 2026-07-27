@@ -43,6 +43,27 @@ foreach(child ${CHILDREN})
   endif()
 endforeach()
 
+# --- Makefile-based module: hello_world (built with make, not CMake) ---
+set(HELLO_DIR "${CMAKE_CURRENT_SOURCE_DIR}/${TARGET_DIR}/hello_world")
+set(HELLO_LIB "${HELLO_DIR}/libhello_world.a")
+
+add_custom_command(
+  OUTPUT "${HELLO_LIB}"
+  COMMAND make
+  WORKING_DIRECTORY "${HELLO_DIR}"
+  DEPENDS "${HELLO_DIR}/hello_world.c" "${HELLO_DIR}/hello_world.h" "${HELLO_DIR}/Makefile"
+  COMMENT "Building hello_world via its Makefile"
+  VERBATIM
+)
+add_custom_target(build_hello_world DEPENDS "${HELLO_LIB}")
+
+add_library(hello_world STATIC IMPORTED)
+set_target_properties(hello_world PROPERTIES
+  IMPORTED_LOCATION "${HELLO_LIB}"
+  INTERFACE_INCLUDE_DIRECTORIES "${HELLO_DIR}"
+)
+list(APPEND EXTRA_LIBS hello_world)
+
 # Write the list of subdirectories that were built to a file, one per line.
 set(BUILT_SUBDIRS_TEXT "")
 foreach(dir ${BUILT_SUBDIRS})
@@ -52,6 +73,9 @@ file(WRITE "${PROJECT_BINARY_DIR}/built_subdirs.txt" "${BUILT_SUBDIRS_TEXT}")
 message(STATUS "Wrote built subdirectory list to ${PROJECT_BINARY_DIR}/built_subdirs.txt")
 
 add_executable(${PROJECT_NAME} main.cpp)
+
+# Ensure the Makefile-based library is built before linking the executable.
+add_dependencies(${PROJECT_NAME} build_hello_world)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC ${EXTRA_LIBS})
 

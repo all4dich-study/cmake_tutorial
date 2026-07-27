@@ -7,6 +7,7 @@
 #endif
 #include "rebel_tools.h"
 #include "rebel_test.h"
+#include "hello_world.h"
 
 // --- The following lines break the C++11 standard (they require C++14 or newer) ---
 
@@ -20,6 +21,8 @@ auto square(int x) {
 
 int main(int argc, char* argv[]) {
     std::cout << "Hello, CMake!" << std::endl;
+
+    print_hello();
 
     print_os_info();
 
